@@ -14,8 +14,15 @@ class CSVLibrary(object):
         with open(filename, 'r') as csv_handler:
             reader = csv_reader(csv_handler, **kwargs)
             try:
-                for row in reader:
-                    yield row
+                for line_number, row in enumerate(reader):
+                    if line_numbers is None:
+                        yield row
+                    elif isinstance(line_numbers, list):
+                        if line_number in line_numbers:
+                            yield row
+                            line_numbers.remove(line_number)
+                            if len(line_numbers) == 0:
+                                break
             except csv.Error as e:
                 logger.error('file %s, line %d: %s' % (filename, reader.line_num, e))
 
@@ -46,6 +53,7 @@ class CSVLibrary(object):
         
         - ``filename``:  name of csv file
         - ``delimiter``: Default: `,`
+        - ``line_numbers``: List of linenumbers to read. Default None
         - ``quoting`` (int):
           _0_: QUOTE_MINIMAL
           _1_: QUOTE_ALL
@@ -66,12 +74,12 @@ class CSVLibrary(object):
         - ``filename``:  name of csv file
         - ``delimiter``: Default: `,`
         - ``fieldnames``: list of column names
+        - ``line_numbers``: List of linenumbers to read. Default None
         - ``quoting`` (int):
           _0_: QUOTE_MINIMAL
           _1_: QUOTE_ALL
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
-
         """
         csv_dict = self._open_csv_file_for_read(
             filename,
