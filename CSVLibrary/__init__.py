@@ -7,6 +7,9 @@ __version__ = VERSION
 
 class CSVLibrary(object):
 
+    ROBOT_LIBRARY_VERSION = VERSION
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+
     @staticmethod
     def _open_csv_file_for_read(filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
         if line_numbers is not None and isinstance(line_numbers, list):
