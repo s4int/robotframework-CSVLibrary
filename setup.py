@@ -23,7 +23,8 @@ setup(name         = 'robotframework-csvlibrary',
           "Development Status :: 4 - Beta",
           "License :: OSI Approved :: Apache Software License",
           "Operating System :: OS Independent",
-          "Programming Language :: Python",
+          "Programming Language :: Python :: 2",
+		  "Programming Language :: Python :: 3",
           "Topic :: Software Development :: Testing"
       ],
       install_requires = [
