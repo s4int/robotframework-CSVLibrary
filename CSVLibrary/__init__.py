@@ -1,6 +1,6 @@
 import csv
 from robot.api import logger
-from version import VERSION
+from .version import VERSION
 
 __version__ = VERSION
 
@@ -13,7 +13,7 @@ class CSVLibrary(object):
     @staticmethod
     def _open_csv_file_for_read(filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
         if line_numbers is not None and isinstance(line_numbers, list):
-            line_numbers = map(int, line_numbers)
+            line_numbers = list(map(int, line_numbers))
         with open(filename, 'r') as csv_handler:
             reader = csv_reader(csv_handler, **kwargs)
             try:
@@ -34,7 +34,7 @@ class CSVLibrary(object):
         with open(filename, 'ab') as csv_handler:
             writer = csv_writer(csv_handler, **kwargs)
             try:
-                if isinstance(writer, csv.DictWriter) and 'fieldnames' in kwargs.keys():
+                if isinstance(writer, csv.DictWriter) and 'fieldnames' in list(kwargs.keys()):
                     csv_handler.truncate()
                     writer.writeheader()
 
@@ -105,7 +105,7 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
         if isinstance(data[0], dict):
-            data = map(lambda row: row.items(), data)
+            data = [list(row.items()) for row in data)
         self._open_csv_file_for_write(filename, data=data, csv_writer=csv.writer, **kwargs)
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
@@ -121,7 +121,7 @@ class CSVLibrary(object):
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
         """
-        fieldnames = fieldnames or data[0].keys()
+        fieldnames = fieldnames or list(data[0].keys())
         self._open_csv_file_for_write(
             filename,
             data=data,

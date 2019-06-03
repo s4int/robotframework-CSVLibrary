@@ -3,7 +3,9 @@
 from os.path import join, dirname
 from setuptools import setup
 
-execfile(join(dirname(__file__), 'CSVLibrary', 'version.py'))
+version_path=join(dirname(__file__), 'CSVLibrary', 'version.py')
+with open(version_path) as f:
+    exec(compile(f.read(), version_path, 'exec'))
 
 DESCRIPTION = """
 CSV file support for Robot Framework.
@@ -23,7 +25,8 @@ setup(name         = 'robotframework-csvlibrary',
           "Development Status :: 4 - Beta",
           "License :: OSI Approved :: Apache Software License",
           "Operating System :: OS Independent",
-          "Programming Language :: Python",
+          "Programming Language :: Python :: 2",
+          "Programming Language :: Python :: 3",
           "Topic :: Software Development :: Testing"
       ],
       install_requires = [
