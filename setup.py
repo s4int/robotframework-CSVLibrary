@@ -3,7 +3,7 @@
 from os.path import join, dirname
 from setuptools import setup
 
-execfile(join(dirname(__file__), 'CSVLibrary', 'version.py'))
+exec(compile(open(join(dirname(__file__), 'CSVLibrary', 'version.py'), "rb").read(), join(dirname(__file__), 'CSVLibrary', 'version.py'), 'exec'))
 
 DESCRIPTION = """
 CSV file support for Robot Framework.
