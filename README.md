@@ -1,19 +1,22 @@
 # Robot Framework CSVLibrary
 ## Introduction
+
+This is a temporarly CSVLibrary version which supports python 3. It is intended to be used until [this pull request](https://github.com/s4int/robotframework-CSVLibrary/pull/7) is pulled. 
+
 CSVLibrary is a [Robot Framework](http://robotframework.org/) library for handling csv files.
 
-More information about this library can be found in the [Keyword Documentation](https://rawgit.com/s4int/robotframework-CSVLibrary/master/doc/CSVLibrary.html).
+More information about this library can be found in the [Keyword Documentation](https://rawgit.com/juacompe/robotframework-CSVLibrary/master/doc/CSVLibrary.html).
 
 ## Installation
 ### Using pip
 ```bash
-      pip install -U robotframework-csvlibrary
+      pip install -U robotframework-csvlibrary-py3
 ```
 
 ### Manual installation
 1. Make sure you have [Robot Framework installed](http://code.google.com/p/robotframework/wiki/Installation).
 2. Download source distributions (`*.tar.gz`) for the library and its dependencies:
-      - https://pypi.python.org/pypi/robotframework-csvlibrary
+      - https://pypi.python.org/pypi/robotframework-csvlibrary-py3
 3. Extract each source distribution to a temporary location.
 4. Go each created directory from the command line and install each project using:
 
