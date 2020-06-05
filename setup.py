@@ -8,7 +8,7 @@ CURDIR = dirname(__file__)
 with open(join(CURDIR, 'requirements.txt')) as f:
     REQUIREMENTS = f.read().splitlines()
 
-filename = join(CURDIR, 'src', 'CSVLibrary', 'version.py')
+filename = join(CURDIR, 'CSVLibrary', 'version.py')
 if sys.version_info.major >= 3:
     exec(compile(open(filename).read(), filename, 'exec'))
 else:
