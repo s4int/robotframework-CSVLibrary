@@ -11,23 +11,32 @@ class CSVLibrary(object):
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     @staticmethod
-    def _open_csv_file_for_read(filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
+    def _reader(to_read, csv_reader=csv.reader, line_numbers=None, **kwargs):
+        reader = csv_reader(to_read, **kwargs)
+        try:
+            for line_number, row in enumerate(reader):
+                if line_numbers is None:
+                    yield row
+                elif isinstance(line_numbers, list):
+                    if line_number in line_numbers:
+                        yield row
+                        line_numbers.remove(line_number)
+                        if len(line_numbers) == 0:
+                            break
+        except csv.Error as e:
+            logger.error('line %d: %s' % (reader.line_num, e))
+
+    def _open_csv_file_for_read(self, filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
         if line_numbers is not None and isinstance(line_numbers, list):
             line_numbers = map(int, line_numbers)
         with open(filename, 'r') as csv_handler:
-            reader = csv_reader(csv_handler, **kwargs)
-            try:
-                for line_number, row in enumerate(reader):
-                    if line_numbers is None:
-                        yield row
-                    elif isinstance(line_numbers, list):
-                        if line_number in line_numbers:
-                            yield row
-                            line_numbers.remove(line_number)
-                            if len(line_numbers) == 0:
-                                break
-            except csv.Error as e:
-                logger.error('file %s, line %d: %s' % (filename, reader.line_num, e))
+            return [row for row in self._reader(csv_handler, csv_reader, line_numbers, **kwargs)]
+
+    def _read_csv(self, csv_string, csv_reader=csv.reader, line_numbers=None, **kwargs):
+        if line_numbers is not None and isinstance(line_numbers, list):
+            line_numbers = map(int, line_numbers)
+
+        return [row for row in self._reader(csv_string.splitlines(), csv_reader, line_numbers, **kwargs)]
 
     @staticmethod
     def _open_csv_file_for_write(filename, data, csv_writer=csv.writer, **kwargs):
@@ -69,7 +78,27 @@ class CSVLibrary(object):
             delimiter=str(delimiter),
             **kwargs
         )
-        return [tuple(row) for row in csv_list]
+        return csv_list
+
+    def read_csv_string_to_list(self, filename, delimiter=',', **kwargs):
+        """Read CSV file and return its content as a Python list of tuples.
+
+        - ``filename``:  name of csv file
+        - ``delimiter``: Default: `,`
+        - ``line_numbers``: List of linenumbers to read. Default None
+        - ``quoting`` (int):
+          _0_: QUOTE_MINIMAL
+          _1_: QUOTE_ALL
+          _2_: QUOTE_NONNUMERIC
+          _3_: QUOTE_NONE
+        """
+        csv_list = self._read_csv(
+            filename,
+            csv_reader=csv.reader,
+            delimiter=str(delimiter),
+            **kwargs
+        )
+        return csv_list
 
     def read_csv_file_to_associative(self, filename, delimiter=',', fieldnames=None, **kwargs):
         """Read CSV file and return its content as a Python list of dictionaries.
@@ -91,7 +120,29 @@ class CSVLibrary(object):
             fieldnames=fieldnames,
             **kwargs
         )
-        return [item for item in csv_dict]
+        return csv_dict
+
+    def read_csv_string_to_associative(self, filename, delimiter=',', fieldnames=None, **kwargs):
+        """Read CSV file and return its content as a Python list of dictionaries.
+
+        - ``filename``:  name of csv file
+        - ``delimiter``: Default: `,`
+        - ``fieldnames``: list of column names
+        - ``line_numbers``: List of linenumbers to read. Default None
+        - ``quoting`` (int):
+          _0_: QUOTE_MINIMAL
+          _1_: QUOTE_ALL
+          _2_: QUOTE_NONNUMERIC
+          _3_: QUOTE_NONE
+        """
+        csv_dict = self._read_csv(
+            filename,
+            csv_reader=csv.DictReader,
+            delimiter=str(delimiter),
+            fieldnames=fieldnames,
+            **kwargs
+        )
+        return csv_dict
 
     def append_to_csv_file(self, filename, data, **kwargs):
         """This keyword will append data to a new or existing CSV file.
