@@ -49,7 +49,7 @@ class CSVLibrary(object):
 
                 writer.writerows(data)
             except csv.Error as e:
-                logger.error('file %s, line %d: %s' % (filename, writer.line_num, e))
+                logger.error('file %s, %s' % (filename, e))
 
     @staticmethod
     def empty_csv_file(filename):
