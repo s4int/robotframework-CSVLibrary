@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/s4int/robotframework-CSVLibrary.svg?branch=master)](https://travis-ci.org/s4int/robotframework-CSVLibrary)
+[![Build Status](https://img.shields.io/pypi/v/robotframework-CSVLibrary.svg?label=version)](https://pypi.python.org/pypi/robotframework-CSVLibrary)
+
 # Robot Framework CSVLibrary
 ## Introduction
 CSVLibrary is a [Robot Framework](http://robotframework.org/) library for handling csv files.

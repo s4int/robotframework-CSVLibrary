@@ -1,18 +1,27 @@
 #!/usr/bin/env python
 
+import sys
 from os.path import join, dirname
 from setuptools import setup
 
-execfile(join(dirname(__file__), 'CSVLibrary', 'version.py'))
+CURDIR = dirname(__file__)
+with open(join(CURDIR, 'requirements.txt')) as f:
+    REQUIREMENTS = f.read().splitlines()
 
-DESCRIPTION = """
-CSV file support for Robot Framework.
-"""[1:-1]
+filename = join(CURDIR, 'CSVLibrary', 'version.py')
+if sys.version_info.major >= 3:
+    exec(compile(open(filename).read(), filename, 'exec'))
+else:
+    execfile(filename)
+
+with open(join(CURDIR, 'README.md')) as f:
+    DESCRIPTION = f.read()
 
 setup(name         = 'robotframework-csvlibrary',
       version      = VERSION,
       description  = 'CSV library for Robot Framework',
       long_description = DESCRIPTION,
+      long_description_content_type='text/markdown',
       author       = 'Marcin Mierzejewski',
       author_email = '<mmierz@gmail.com>',
       url          = 'https://github.com/s4int/robotframework-CSVLibrary',
@@ -24,10 +33,12 @@ setup(name         = 'robotframework-csvlibrary',
           "License :: OSI Approved :: Apache Software License",
           "Operating System :: OS Independent",
           "Programming Language :: Python",
-          "Topic :: Software Development :: Testing"
+          "Topic :: Software Development :: Testing",
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.6',
       ],
-      install_requires = [
-          'robotframework >= 2.6.0',
-      ],
+      install_requires = REQUIREMENTS,
       packages    = ['CSVLibrary'],
       )
