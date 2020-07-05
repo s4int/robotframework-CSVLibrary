@@ -17,12 +17,11 @@ class CSVLibrary(object):
             for line_number, row in enumerate(reader):
                 if line_numbers is None:
                     yield row
-                elif isinstance(line_numbers, list):
-                    if line_number in line_numbers:
-                        yield row
-                        line_numbers.remove(line_number)
-                        if len(line_numbers) == 0:
-                            break
+                elif isinstance(line_numbers, list) and line_number in line_numbers:
+                    yield row
+                    line_numbers.remove(line_number)
+                    if len(line_numbers) == 0:
+                        break
         except csv.Error as e:
             logger.error('line %d: %s' % (reader.line_num, e))
 
