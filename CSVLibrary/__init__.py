@@ -27,7 +27,7 @@ class CSVLibrary(object):
 
     def _open_csv_file_for_read(self, filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
         if line_numbers is not None and isinstance(line_numbers, list):
-            line_numbers = map(int, line_numbers)
+            line_numbers = list(map(int, line_numbers))
         with open(filename, 'r') as csv_handler:
             return [row for row in self._reader(csv_handler, csv_reader, line_numbers, **kwargs)]
 
