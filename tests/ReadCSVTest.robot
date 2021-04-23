@@ -9,9 +9,9 @@ Library         CSVLibrary
 &{template_dict}=   id=1  first_name=Douglas  last_name=Morris  email=dmorris0@mozilla.org  gender=Male  ip_address=205.4.212.229
 &{template_dict_quoting}=   id=1  first_name=Douglas  last_name=Morris  email=dmorris0@mozilla.org  gender="Male  ip_address=205.4.212.229
 ${csv_string}=          SEPARATOR=
-...     id,first_name,last_name,email,gender,ip_address\n
-...     1,Douglas,Morris,dmorris0@mozilla.org,Male,205.4.212.229\n
-...     2,Stephanie,Oliver,soliver1@google.com.br,Female,18.101.154.106\n
+...  id,first_name,last_name,email,gender,ip_address\n
+...  1,Douglas,Morris,dmorris0@mozilla.org,Male,205.4.212.229\n
+...  2,Stephanie,Oliver,soliver1@google.com.br,Female,18.101.154.106\n
 
 *** Test Cases ***
 Read csv file to a list example test
@@ -34,11 +34,3 @@ Read csv string to a dict example test
     @{dict}=    read csv string to associative  ${csv_string}
     dictionaries should be equal  ${template_dict}  ${dict[0]}
 
-Empty csv file
-    Pass Execution  TBA
-
-Append to csv file
-    Pass Execution  TBA
-
-Csv file from associative
-    Pass Execution  TBA
