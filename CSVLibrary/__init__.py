@@ -39,11 +39,14 @@ class CSVLibrary(object):
 
     @staticmethod
     def _open_csv_file_for_write(filename, data, csv_writer=csv.writer, **kwargs):
-        with open(filename, 'ab') as csv_handler:
+
+        if 'fieldnames' not in kwargs.keys() and isinstance(data[0], dict):
+            kwargs['fieldnames'] = data[0].keys()
+
+        with open(filename, 'a', newline='') as csv_handler:
             writer = csv_writer(csv_handler, **kwargs)
             try:
-                if isinstance(writer, csv.DictWriter) and 'fieldnames' in kwargs.keys():
-                    csv_handler.truncate()
+                if isinstance(writer, csv.DictWriter) and csv_handler.tell() == 0:
                     writer.writeheader()
 
                 writer.writerows(data)
