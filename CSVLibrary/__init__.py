@@ -43,7 +43,7 @@ class CSVLibrary(object):
         if 'fieldnames' not in kwargs.keys() and isinstance(data[0], dict):
             kwargs['fieldnames'] = data[0].keys()
 
-        with open(filename, 'a', newline='') as csv_handler:
+        with open(filename, 'a') as csv_handler:
             writer = csv_writer(csv_handler, **kwargs)
             try:
                 if isinstance(writer, csv.DictWriter) and csv_handler.tell() == 0:
@@ -157,13 +157,67 @@ class CSVLibrary(object):
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
         """
+
+        if isinstance(data, dict):
+            data = [data]
+
+        fieldnames = self._open_csv_file_for_read(
+            filename,
+            csv_reader=csv.reader,
+            line_numbers=[0],
+            **kwargs
+        )[0]
+
+        self._open_csv_file_for_write(
+            filename,
+            data=data,
+            csv_writer=csv.DictWriter,
+            fieldnames=fieldnames,
+            **kwargs
+        )
+
+    def append_to_csv_string(self, filename, data, **kwargs):
+        """This keyword will append data to a new or existing CSV file.
+
+        - ``filename``:  name of csv file
+        - ``data``: iterable(e.g. list or tuple) data.
+        - ``quoting`` (int):
+          _0_: QUOTE_MINIMAL
+          _1_: QUOTE_ALL
+          _2_: QUOTE_NONNUMERIC
+          _3_: QUOTE_NONE
+        """
         if isinstance(data[0], dict):
             data = map(lambda row: row.items(), data)
-        self._open_csv_file_for_write(filename, data=data, csv_writer=csv.writer, **kwargs)
+        self._open_csv_file_for_write(filename, data=data, csv_writer=csv.DictWriter, **kwargs)
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
         """This keyword will create new file
         
+        - ``filename``:  name of csv file
+        - ``data``: iterable(e.g. list or tuple) data.
+        - ``fieldnames``: list of column names
+        - ``delimiter``: Default: `,`
+        - ``quoting`` (int):
+          _0_: QUOTE_MINIMAL
+          _1_: QUOTE_ALL
+          _2_: QUOTE_NONNUMERIC
+          _3_: QUOTE_NONE
+        """
+        fieldnames = fieldnames or data[0].keys()
+
+        self._open_csv_file_for_write(
+            filename,
+            data=data,
+            csv_writer=csv.DictWriter,
+            delimiter=str(delimiter),
+            fieldnames=fieldnames,
+            **kwargs
+        )
+
+    def csv_string_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
+        """This keyword will create new file
+
         - ``filename``:  name of csv file
         - ``data``: iterable(e.g. list or tuple) data.
         - ``fieldnames``: list of column names
