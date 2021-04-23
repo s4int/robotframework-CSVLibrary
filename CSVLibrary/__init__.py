@@ -79,10 +79,10 @@ class CSVLibrary(object):
         )
         return csv_list
 
-    def read_csv_string_to_list(self, filename, delimiter=',', **kwargs):
-        """Read CSV file and return its content as a Python list of tuples.
+    def read_csv_string_to_list(self, csv_string, delimiter=',', **kwargs):
+        """Read CSV string and return its content as a Python list of tuples.
 
-        - ``filename``:  name of csv file
+        - ``csv_string``:  name of csv file
         - ``delimiter``: Default: `,`
         - ``line_numbers``: List of linenumbers to read. Default None
         - ``quoting`` (int):
@@ -92,7 +92,7 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
         csv_list = self._read_csv(
-            filename,
+            csv_string,
             csv_reader=csv.reader,
             delimiter=str(delimiter),
             **kwargs
@@ -121,10 +121,10 @@ class CSVLibrary(object):
         )
         return csv_dict
 
-    def read_csv_string_to_associative(self, filename, delimiter=',', fieldnames=None, **kwargs):
-        """Read CSV file and return its content as a Python list of dictionaries.
+    def read_csv_string_to_associative(self, csv_string, delimiter=',', fieldnames=None, **kwargs):
+        """Read CSV from string  and return its content as a Python list of dictionaries.
 
-        - ``filename``:  name of csv file
+        - ``csv_string``:  name of csv file
         - ``delimiter``: Default: `,`
         - ``fieldnames``: list of column names
         - ``line_numbers``: List of linenumbers to read. Default None
@@ -135,7 +135,7 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
         csv_dict = self._read_csv(
-            filename,
+            csv_string,
             csv_reader=csv.DictReader,
             delimiter=str(delimiter),
             fieldnames=fieldnames,
