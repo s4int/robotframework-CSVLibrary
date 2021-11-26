@@ -31,33 +31,33 @@ class CSVLibrary(object):
         except csv.Error as e:
             logger.error('line %d: %s' % (reader.line_num, e))
 
-    def _open_csv_file_for_read(self, filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
+    def _read_csv(self, csv_handler, csv_reader=csv.reader, line_numbers=None, **kwargs):
         if line_numbers is not None and isinstance(line_numbers, list):
             line_numbers = list(map(int, line_numbers))
+
+        return [row for row in self._reader(csv_handler, csv_reader, line_numbers, **kwargs)]
+
+    def _open_csv_file_for_read(self, filename, csv_reader=csv.reader, line_numbers=None, **kwargs):
         with open(filename, 'r') as csv_handler:
-            return [row for row in self._reader(csv_handler, csv_reader, line_numbers, **kwargs)]
-
-    def _read_csv(self, csv_string, csv_reader=csv.reader, line_numbers=None, **kwargs):
-        if line_numbers is not None and isinstance(line_numbers, list):
-            line_numbers = map(int, line_numbers)
-
-        return [row for row in self._reader(csv_string.splitlines(), csv_reader, line_numbers, **kwargs)]
+            return self._read_csv(csv_handler, csv_reader, line_numbers, **kwargs)
 
     @staticmethod
-    def _open_csv_file_for_write(filename, data, csv_writer=csv.writer, **kwargs):
-
+    def _write_csv(csv_handler, data, csv_writer=csv.writer, **kwargs):
         if 'fieldnames' not in kwargs.keys() and isinstance(data[0], dict):
             kwargs['fieldnames'] = data[0].keys()
 
-        with open(filename, 'a') as csv_handler:
-            writer = csv_writer(csv_handler, **kwargs)
-            try:
-                if isinstance(writer, csv.DictWriter) and csv_handler.tell() == 0:
-                    writer.writeheader()
+        writer = csv_writer(csv_handler, **kwargs)
+        try:
+            if isinstance(writer, csv.DictWriter) and csv_handler.tell() == 0:
+                writer.writeheader()
 
-                writer.writerows(data)
-            except csv.Error as e:
-                logger.error('file %s, %s' % (filename, e))
+            writer.writerows(data)
+        except csv.Error as e:
+            logger.error('%s' % e)
+
+    def _open_csv_file_for_write(self, filename, data, csv_writer=csv.writer, **kwargs):
+        with open(filename, 'a') as csv_handler:
+            self._write_csv(csv_handler, data, csv_writer, **kwargs)
 
     @staticmethod
     def empty_csv_file(filename):
@@ -101,7 +101,7 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
         csv_list = self._read_csv(
-            csv_string,
+            csv_string.splitlines(),
             csv_reader=csv.reader,
             delimiter=str(delimiter),
             **kwargs
@@ -144,7 +144,7 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
         csv_dict = self._read_csv(
-            csv_string,
+            csv_string.splitlines(),
             csv_reader=csv.DictReader,
             delimiter=str(delimiter),
             fieldnames=fieldnames,
@@ -197,11 +197,15 @@ class CSVLibrary(object):
             data = [data]
 
         fieldnames = self._read_csv(
-            csv_string,
+            csv_string.splitlines(),
             csv_reader=csv.reader,
             delimiter=str(delimiter),
             **kwargs
         )[0]
+
+        kwargs['fieldnames'] = fieldnames
+        if 'lineterminator' not in kwargs.keys():
+            kwargs['lineterminator'] = '\n'
 
         with IO() as output:
             if sys.version_info.major >= 3:
@@ -209,14 +213,7 @@ class CSVLibrary(object):
             else:
                 output.write(csv_string.encode("utf-8"))
 
-            if 'fieldnames' not in kwargs.keys():
-                kwargs['fieldnames'] = fieldnames
-            if 'lineterminator' not in kwargs.keys():
-                kwargs['lineterminator'] = '\n'
-
-            writer = csv.DictWriter(output, **kwargs)
-            writer.writerows(data)
-
+            self._write_csv(output, data, csv_writer=csv.DictWriter, **kwargs)
             return output.getvalue()
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
@@ -258,15 +255,11 @@ class CSVLibrary(object):
         if isinstance(data, dict):
             data = [data]
 
-        if 'fieldnames' not in kwargs.keys():
-            kwargs['fieldnames'] = fieldnames or data[0].keys()
+        kwargs['fieldnames'] = fieldnames or data[0].keys()
         if 'lineterminator' not in kwargs.keys():
             kwargs['lineterminator'] = '\n'
         kwargs['delimiter'] = delimiter
 
         with IO() as output:
-            writer = csv.DictWriter(output, **kwargs)
-            writer.writeheader()
-            writer.writerows(data)
-
+            self._write_csv(output, data, csv_writer=csv.DictWriter, **kwargs)
             return output.getvalue()
