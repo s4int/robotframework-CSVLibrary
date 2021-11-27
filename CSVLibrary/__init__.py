@@ -100,13 +100,17 @@ class CSVLibrary(object):
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
         """
-        csv_list = self._read_csv(
-            csv_string.splitlines(),
-            csv_reader=csv.reader,
-            delimiter=str(delimiter),
-            **kwargs
-        )
-        return csv_list
+        if sys.version_info.major < 3:
+            csv_string = csv_string.encode("utf-8")
+
+        with IO(csv_string) as csv_handler:
+            csv_list = self._read_csv(
+                csv_handler,
+                csv_reader=csv.reader,
+                delimiter=str(delimiter),
+                **kwargs
+            )
+            return csv_list
 
     def read_csv_file_to_associative(self, filename, delimiter=',', fieldnames=None, **kwargs):
         """Read CSV file and return its content as a Python list of dictionaries.
@@ -121,11 +125,11 @@ class CSVLibrary(object):
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
         """
+        kwargs['fieldnames'] = fieldnames
         csv_dict = self._open_csv_file_for_read(
             filename,
             csv_reader=csv.DictReader,
             delimiter=str(delimiter),
-            fieldnames=fieldnames,
             **kwargs
         )
         return csv_dict
@@ -143,14 +147,18 @@ class CSVLibrary(object):
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
         """
-        csv_dict = self._read_csv(
-            csv_string.splitlines(),
-            csv_reader=csv.DictReader,
-            delimiter=str(delimiter),
-            fieldnames=fieldnames,
-            **kwargs
-        )
-        return csv_dict
+        if sys.version_info.major < 3:
+            csv_string = csv_string.encode("utf-8")
+
+        with IO(csv_string) as csv_handler:
+            csv_dict = self._read_csv(
+                csv_handler,
+                csv_reader=csv.DictReader,
+                delimiter=str(delimiter),
+                fieldnames=fieldnames,
+                **kwargs
+            )
+            return csv_dict
 
     def append_to_csv_file(self, filename, data, **kwargs):
         """This keyword will append data to a new or existing CSV file.
@@ -182,7 +190,7 @@ class CSVLibrary(object):
             **kwargs
         )
 
-    def append_to_csv_string(self, csv_string, data, delimiter=',', **kwargs):
+    def append_to_csv_string(self, csv_string, data, **kwargs):
         """This keyword will append data to a new or existing CSV string.
 
         - ``csv_string``:  csv formatted string
@@ -196,25 +204,23 @@ class CSVLibrary(object):
         if isinstance(data, dict):
             data = [data]
 
-        fieldnames = self._read_csv(
-            csv_string.splitlines(),
-            csv_reader=csv.reader,
-            delimiter=str(delimiter),
-            **kwargs
-        )[0]
-
-        kwargs['fieldnames'] = fieldnames
         if 'lineterminator' not in kwargs.keys():
             kwargs['lineterminator'] = '\n'
 
-        with IO() as output:
-            if sys.version_info.major >= 3:
-                output.write(csv_string)
-            else:
-                output.write(csv_string.encode("utf-8"))
+        if sys.version_info.major < 3:
+            csv_string = csv_string.encode("utf-8")
 
-            self._write_csv(output, data, csv_writer=csv.DictWriter, **kwargs)
-            return output.getvalue()
+        with IO(csv_string) as csv_handler:
+            fieldnames = self._read_csv(
+                csv_handler,
+                csv_reader=csv.reader,
+                **kwargs
+            )[0]
+
+            kwargs['fieldnames'] = fieldnames
+
+            self._write_csv(csv_handler, data, csv_writer=csv.DictWriter, **kwargs)
+            return csv_handler.getvalue()
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
         """This keyword will create new file
@@ -229,14 +235,13 @@ class CSVLibrary(object):
           _2_: QUOTE_NONNUMERIC
           _3_: QUOTE_NONE
         """
-        fieldnames = fieldnames or data[0].keys()
+        kwargs['fieldnames'] = fieldnames or data[0].keys()
 
         self._open_csv_file_for_write(
             filename,
             data=data,
             csv_writer=csv.DictWriter,
             delimiter=str(delimiter),
-            fieldnames=fieldnames,
             **kwargs
         )
 
@@ -260,6 +265,6 @@ class CSVLibrary(object):
             kwargs['lineterminator'] = '\n'
         kwargs['delimiter'] = delimiter
 
-        with IO() as output:
-            self._write_csv(output, data, csv_writer=csv.DictWriter, **kwargs)
-            return output.getvalue()
+        with IO() as csv_handler:
+            self._write_csv(csv_handler, data, csv_writer=csv.DictWriter, **kwargs)
+            return csv_handler.getvalue()
