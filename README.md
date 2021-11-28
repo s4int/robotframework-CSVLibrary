@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/s4int/robotframework-CSVLibrary.svg?branch=master)](https://travis-ci.org/s4int/robotframework-CSVLibrary)
+[![Build Status](https://app.travis-ci.com/s4int/robotframework-CSVLibrary.svg?branch=master)](https://app.travis-ci.com/s4int/robotframework-CSVLibrary)
 [![Build Status](https://img.shields.io/pypi/v/robotframework-CSVLibrary.svg?label=version)](https://pypi.python.org/pypi/robotframework-CSVLibrary)
 
 # Robot Framework CSVLibrary
