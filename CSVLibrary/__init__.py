@@ -172,21 +172,30 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
 
-        if isinstance(data, dict):
-            data = [data]
-
-        fieldnames = self._open_csv_file_for_read(
+        header = self._open_csv_file_for_read(
             filename,
             csv_reader=csv.reader,
             line_numbers=[0],
             **kwargs
-        )[0]
+        )
+
+        if isinstance(data, dict):
+            data = [data]
+
+        fieldnames = None
+        if isinstance(data[0], dict):
+            fieldnames = data[0].keys()
+
+        if isinstance(data[0], dict) and len(header) > 0:
+            fieldnames = header[0]
+
+        if fieldnames is not None:
+            kwargs['fieldnames'] = fieldnames
+            kwargs['csv_writer'] = csv.DictWriter
 
         self._open_csv_file_for_write(
             filename,
             data=data,
-            csv_writer=csv.DictWriter,
-            fieldnames=fieldnames,
             **kwargs
         )
 
