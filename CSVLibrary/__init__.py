@@ -1,6 +1,5 @@
 import csv
 from robot.api import logger
-from .version import VERSION
 import sys
 
 if sys.version_info.major >= 3:
@@ -8,12 +7,12 @@ if sys.version_info.major >= 3:
 else:
     from io import BytesIO as IO
 
-__version__ = VERSION
+__version__ = '0.0.3'
 
 
 class CSVLibrary(object):
 
-    ROBOT_LIBRARY_VERSION = VERSION
+    ROBOT_LIBRARY_VERSION = __version__
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     @staticmethod
