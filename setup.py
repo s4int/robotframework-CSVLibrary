@@ -17,18 +17,18 @@ else:
 with open(join(CURDIR, 'README.md')) as f:
     DESCRIPTION = f.read()
 
-setup(name         = 'robotframework-csvlibrary',
-      version      = VERSION,
-      description  = 'CSV library for Robot Framework',
-      long_description = DESCRIPTION,
+setup(name='robotframework-csvlibrary',
+      version=VERSION,
+      description='CSV library for Robot Framework',
+      long_description=DESCRIPTION,
       long_description_content_type='text/markdown',
-      author       = 'Marcin Mierzejewski',
-      author_email = '<mmierz@gmail.com>',
-      url          = 'https://github.com/s4int/robotframework-CSVLibrary',
-      license      = 'Apache License 2.0',
-      keywords     = 'robotframework testing csv',
-      platforms    = 'any',
-      classifiers  = [
+      author='Marcin Mierzejewski',
+      author_email='<mmierz@gmail.com>',
+      url='https://github.com/s4int/robotframework-CSVLibrary',
+      license='Apache License 2.0',
+      keywords='robotframework testing csv',
+      platforms='any',
+      classifiers=[
           "Development Status :: 4 - Beta",
           "License :: OSI Approved :: Apache Software License",
           "Operating System :: OS Independent",
@@ -39,6 +39,6 @@ setup(name         = 'robotframework-csvlibrary',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.6',
       ],
-      install_requires = REQUIREMENTS,
-      packages    = ['CSVLibrary'],
+      install_requires=REQUIREMENTS,
+      packages=['CSVLibrary'],
       )
