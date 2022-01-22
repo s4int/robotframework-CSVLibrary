@@ -1,6 +1,5 @@
 import csv
 from robot.api import logger
-from .version import VERSION
 import sys
 
 if sys.version_info.major >= 3:
@@ -8,12 +7,12 @@ if sys.version_info.major >= 3:
 else:
     from io import BytesIO as IO
 
-__version__ = VERSION
+__version__ = '0.0.3'
 
 
 class CSVLibrary(object):
 
-    ROBOT_LIBRARY_VERSION = VERSION
+    ROBOT_LIBRARY_VERSION = __version__
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     @staticmethod
@@ -62,7 +61,7 @@ class CSVLibrary(object):
     @staticmethod
     def empty_csv_file(filename):
         """This keyword will empty the CSV file.
-        
+
         - ``filename``: name of csv file
         """
         with open(filename, "w") as csv_handler:
@@ -70,7 +69,7 @@ class CSVLibrary(object):
 
     def read_csv_file_to_list(self, filename, delimiter=',', **kwargs):
         """Read CSV file and return its content as a Python list of tuples.
-        
+
         - ``filename``:  name of csv file
         - ``delimiter``: Default: `,`
         - ``line_numbers``: List of linenumbers to read. Default None
@@ -114,7 +113,7 @@ class CSVLibrary(object):
 
     def read_csv_file_to_associative(self, filename, delimiter=',', fieldnames=None, **kwargs):
         """Read CSV file and return its content as a Python list of dictionaries.
-        
+
         - ``filename``:  name of csv file
         - ``delimiter``: Default: `,`
         - ``fieldnames``: list of column names
@@ -162,7 +161,7 @@ class CSVLibrary(object):
 
     def append_to_csv_file(self, filename, data, **kwargs):
         """This keyword will append data to a new or existing CSV file.
-        
+
         - ``filename``:  name of csv file
         - ``data``: iterable(e.g. list or tuple) data.
         - ``quoting`` (int):
@@ -224,7 +223,7 @@ class CSVLibrary(object):
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
         """This keyword will create new file
-        
+
         - ``filename``:  name of csv file
         - ``data``: iterable(e.g. list or tuple) data.
         - ``fieldnames``: list of column names

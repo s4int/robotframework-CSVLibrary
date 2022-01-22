@@ -2,7 +2,7 @@
 from os.path import join, dirname
 try:
     from robot.libdoc import libdoc
-except:
+except Exception:
     def main():
         print("Robot Framework 2.7 or later required for generating documentation")
 else:
