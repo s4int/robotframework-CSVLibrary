@@ -24,4 +24,3 @@ Read csv string to a list example test
 Read csv string to a dict example test
     @{dict}=    Read Csv String To Associative  ${csv_string_assoc}
     Dictionaries Should Be Equal  ${template_dict_full[-1]}  ${dict[-1]}
-

@@ -26,13 +26,13 @@ Append to csv file
     ${aa}=  Append To Csv File  ${data_append_file}    ${template_dict}
 
     @{appended_dict}=    Read Csv File To Associative  ${data_append_file}
-	Should Be Equal   ${appended_dict}  ${template_dict_full}
+    Should Be Equal   ${appended_dict}  ${template_dict_full}
     [Teardown]    Remove File  ${data_append_file}
 
 Append to csv string
-	${content}=     Append To Csv String    ${csv_string_assoc}    ${template_dict_row10}
-	Should Be Equal     ${csv_string_ext}  ${content}
+    ${content}=     Append To Csv String    ${csv_string_assoc}    ${template_dict_row10}
+    Should Be Equal     ${csv_string_ext}  ${content}
 
 CSV string from associative
-	${content}=     Csv String From Associative    ${template_dict_full}
-	Should Be Equal     ${csv_string_assoc}  ${content}
+    ${content}=     Csv String From Associative    ${template_dict_full}
+    Should Be Equal     ${csv_string_assoc}  ${content}
