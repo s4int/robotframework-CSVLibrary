@@ -220,15 +220,24 @@ class CSVLibrary(object):
             csv_string = csv_string.encode("utf-8")
 
         with IO(csv_string) as csv_handler:
-            fieldnames = self._read_csv(
+            header = self._read_csv(
                 csv_handler,
                 csv_reader=csv.reader,
                 **kwargs
-            )[0]
+            )
 
-            kwargs['fieldnames'] = fieldnames
+            fieldnames = None
+            if isinstance(data[0], dict):
+                fieldnames = data[0].keys()
 
-            self._write_csv(csv_handler, data, csv_writer=csv.DictWriter, **kwargs)
+            if isinstance(data[0], dict) and len(header) > 0:
+                fieldnames = header[0]
+
+            if fieldnames is not None:
+                kwargs['fieldnames'] = fieldnames
+                kwargs['csv_writer'] = csv.DictWriter
+
+            self._write_csv(csv_handler, data, **kwargs)
             return csv_handler.getvalue()
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
