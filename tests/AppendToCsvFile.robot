@@ -41,3 +41,21 @@ Append assoc to file with header
 	@{dict}=    Read Csv File To Associative  ${data_assoc_file}
     Dictionaries Should Be Equal  ${template_dict[-1]}  ${dict[-1]}
 	[Teardown]    Remove File  ${data_assoc_file}
+
+Append single list row to file
+	[Setup]     Copy File	${inputFile}	${data_assoc_file}
+	File Should Not Be Empty    ${data_assoc_file}
+	Append To Csv File     ${data_assoc_file}    ${template_row10}
+
+	@{list}=    Read Csv File To List  ${data_assoc_file}
+    Lists Should Be Equal  ${template_row10}  ${list[-1]}
+	[Teardown]    Remove File  ${data_assoc_file}
+
+Append single assoc row to file
+	[Setup]     Copy File	${inputFile}	${data_assoc_file}
+	File Should Not Be Empty    ${data_assoc_file}
+	Append To Csv File     ${data_assoc_file}    ${template_dict_row10}
+
+	@{dict}=    Read Csv File To Associative  ${data_assoc_file}
+    Dictionaries Should Be Equal  ${template_dict_row10}  ${dict[-1]}
+	[Teardown]    Remove File  ${data_assoc_file}

@@ -26,3 +26,15 @@ Append assoc to string with header
 
 	@{dict}=  Read Csv String to Associative  ${out}
     Dictionaries Should Be Equal  ${template_dict_row10}  ${dict[-1]}
+
+Append single list row to string
+	${out}=  Append To Csv String     ${csv_string_assoc}    ${template_row10}
+
+	@{dict}=  Read Csv String to List  ${out}
+    Lists Should Be Equal  ${template_row10}  ${dict[-1]}
+
+Append single assoc row to string
+	${out}=  Append To Csv String     ${csv_string_assoc}    ${template_dict_row10}
+
+	@{dict}=  Read Csv String to Associative  ${out}
+    Dictionaries Should Be Equal  ${template_dict_row10}  ${dict[-1]}

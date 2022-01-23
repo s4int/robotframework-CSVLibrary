@@ -50,6 +50,8 @@ class CSVLibrary(object):
             if isinstance(writer, csv.DictWriter) and csv_handler.tell() == 0:
                 writer.writeheader()
 
+            if not isinstance(data[0], (list, tuple, dict, set)):
+                data = [data]
             writer.writerows(data)
         except csv.Error as e:
             logger.error('%s' % e)
