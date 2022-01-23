@@ -12,7 +12,7 @@ Append list to empty file
 	Append To Csv File     ${emptytFile}    ${template_list}
 
 	${list}=  read csv file to list  ${emptytFile}
-	lists should be equal  ${template_list}  ${list}
+	Lists Should Be Equal  ${template_list}  ${list}
     [Teardown]    Remove File  ${emptytFile}
 
 Append assoc to empty file
@@ -20,8 +20,8 @@ Append assoc to empty file
 	File Should Be Empty    ${emptytFile}
 	Append To Csv File     ${emptytFile}    ${template_dict}
 
-    @{dict}=    read csv file to associative  ${emptytFile}
-    dictionaries should be equal  ${template_dict[-1]}  ${dict[-1]}
+    @{dict}=    Read Csv File To Associative  ${emptytFile}
+    Dictionaries Should Be Equal  ${template_dict[-1]}  ${dict[-1]}
 	[Teardown]    Remove File      ${emptytFile}
 
 Append list to file with header
@@ -29,8 +29,8 @@ Append list to file with header
 	File Should Not Be Empty    ${data_assoc_file}
 	Append To Csv File     ${data_assoc_file}    ${template_list}
 
-	@{dict}=    read csv file to associative  ${data_assoc_file}
-    dictionaries should be equal  ${template_dict[-1]}  ${dict[-1]}
+	@{dict}=    Read Csv File To Associative  ${data_assoc_file}
+    Dictionaries Should Be Equal  ${template_dict[-1]}  ${dict[-1]}
 	[Teardown]    Remove File  ${data_assoc_file}
 
 Append assoc to file with header
@@ -38,6 +38,6 @@ Append assoc to file with header
 	File Should Not Be Empty    ${data_assoc_file}
 	Append To Csv File     ${data_assoc_file}    ${template_dict}
 
-	@{dict}=    read csv file to associative  ${data_assoc_file}
-    dictionaries should be equal  ${template_dict[-1]}  ${dict[-1]}
+	@{dict}=    Read Csv File To Associative  ${data_assoc_file}
+    Dictionaries Should Be Equal  ${template_dict[-1]}  ${dict[-1]}
 	[Teardown]    Remove File  ${data_assoc_file}
