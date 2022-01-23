@@ -47,14 +47,14 @@ Append to csv file
     File Should Not Be Empty    ${data_append_file}
     ${aa}=  Append To Csv File  ${data_append_file}    ${template_dict_append}
 
-    @{appended_dict}=    read csv file to associative  ${data_append_file}
+    @{appended_dict}=    Read Csv File To Associative  ${data_append_file}
 	List Should Contain Value   ${appended_dict}  ${template_dict_append}
     [Teardown]    Remove File  ${data_append_file}
 
 Append to csv string
-	${content}=     append to csv string    ${csv_string}    ${template_dict_row3}
+	${content}=     Append To Csv String    ${csv_string}    ${template_dict_row3}
 	Should Be Equal     ${csv_string_ext}  ${content}
 
 CSV string from associative
-	${content}=     csv string from associative    ${template_dict_rows}
+	${content}=     Csv String From Associative    ${template_dict_rows}
 	Should Be Equal     ${csv_string}  ${content}

@@ -19,7 +19,7 @@ Append list to string with header
 	${out}=  Append To Csv String     ${csv_string_assoc}    ${template_list}
 
 	@{list}=  Read Csv String To List  ${out}
-    lists should be equal  ${template_list[-1]}  ${list[-1]}
+    Lists Should Be Equal  ${template_list[-1]}  ${list[-1]}
 
 Append assoc to string with header
 	${out}=  Append To Csv String     ${csv_string_assoc}    ${template_dict_row3}

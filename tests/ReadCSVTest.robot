@@ -15,20 +15,20 @@ ${csv_string}=          SEPARATOR=
 
 *** Test Cases ***
 Read csv file to a list example test
-    @{list}=  read csv file to list  ${CURDIR}${/}data.csv
-    lists should be equal  ${template_list}  ${list[1]}
+    @{list}=  Read Csv File To List  ${CURDIR}${/}data.csv
+    Lists Should Be Equal  ${template_list}  ${list[1]}
 
 Read csv file to a dict example test
-    @{dict}=    read csv file to associative  ${CURDIR}${/}data.csv
-    dictionaries should be equal  ${template_dict}  ${dict[0]}
+    @{dict}=    Read Csv File To Associative  ${CURDIR}${/}data.csv
+    Dictionaries Should Be Equal  ${template_dict}  ${dict[0]}
 
 Read csv file without quoting to associative
-    @{dict}=    read csv file to associative  ${CURDIR}${/}data_quoting.csv  delimiter=,  quoting=${3}
-    dictionaries should be equal  ${template_dict_quoting}  ${dict[0]}
+    @{dict}=    Read Csv File To Associative  ${CURDIR}${/}data_quoting.csv  delimiter=,  quoting=${3}
+    Dictionaries Should Be Equal  ${template_dict_quoting}  ${dict[0]}
 
 Read csv string to a list example test
-    @{list}=  read csv string to list  ${csv_string}
-    lists should be equal  ${template_list}  ${list[1]}
+    @{list}=  Read Csv String To List  ${csv_string}
+    Lists Should Be Equal  ${template_list}  ${list[1]}
 
 Read csv string to a dict example test
     @{dict}=    read csv string to associative  ${csv_string}
