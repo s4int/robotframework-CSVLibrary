@@ -7,7 +7,7 @@ if sys.version_info.major >= 3:
 else:
     from io import BytesIO as IO
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 
 class CSVLibrary(object):
