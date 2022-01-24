@@ -265,7 +265,7 @@ class CSVLibrary(object):
         )
 
     def csv_string_from_associative(self, data, fieldnames=None, delimiter=',', **kwargs):
-        """This keyword will create new file
+        """This keyword will return csv string
 
         - ``data``: iterable(e.g. list or tuple) data.
         - ``fieldnames``: list of column names
