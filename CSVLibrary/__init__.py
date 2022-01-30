@@ -57,7 +57,12 @@ class CSVLibrary(object):
             logger.error('%s' % e)
 
     def _open_csv_file_for_write(self, filename, data, csv_writer=csv.writer, **kwargs):
-        with open(filename, 'a') as csv_handler:
+        open_args = {'mode': 'ab'}
+        if sys.version_info >= (3, 2):
+            open_args['mode'] = 'a'
+            open_args['newline'] = ''
+
+        with open(filename, **open_args) as csv_handler:
             self._write_csv(csv_handler, data, csv_writer, **kwargs)
 
     @staticmethod
