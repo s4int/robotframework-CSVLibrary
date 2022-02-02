@@ -7,7 +7,7 @@ if sys.version_info.major >= 3:
 else:
     from io import BytesIO as IO
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 
 class CSVLibrary(object):
@@ -50,12 +50,19 @@ class CSVLibrary(object):
             if isinstance(writer, csv.DictWriter) and csv_handler.tell() == 0:
                 writer.writeheader()
 
+            if not isinstance(data[0], (list, tuple, dict, set)):
+                data = [data]
             writer.writerows(data)
         except csv.Error as e:
             logger.error('%s' % e)
 
     def _open_csv_file_for_write(self, filename, data, csv_writer=csv.writer, **kwargs):
-        with open(filename, 'a') as csv_handler:
+        open_args = {'mode': 'ab'}
+        if sys.version_info >= (3, 2):
+            open_args['mode'] = 'a'
+            open_args['newline'] = ''
+
+        with open(filename, **open_args) as csv_handler:
             self._write_csv(csv_handler, data, csv_writer, **kwargs)
 
     @staticmethod
@@ -171,21 +178,30 @@ class CSVLibrary(object):
           _3_: QUOTE_NONE
         """
 
-        if isinstance(data, dict):
-            data = [data]
-
-        fieldnames = self._open_csv_file_for_read(
+        header = self._open_csv_file_for_read(
             filename,
             csv_reader=csv.reader,
             line_numbers=[0],
             **kwargs
-        )[0]
+        )
+
+        if isinstance(data, dict):
+            data = [data]
+
+        fieldnames = None
+        if isinstance(data[0], dict):
+            fieldnames = data[0].keys()
+
+        if isinstance(data[0], dict) and len(header) > 0:
+            fieldnames = header[0]
+
+        if fieldnames is not None:
+            kwargs['fieldnames'] = fieldnames
+            kwargs['csv_writer'] = csv.DictWriter
 
         self._open_csv_file_for_write(
             filename,
             data=data,
-            csv_writer=csv.DictWriter,
-            fieldnames=fieldnames,
             **kwargs
         )
 
@@ -210,15 +226,24 @@ class CSVLibrary(object):
             csv_string = csv_string.encode("utf-8")
 
         with IO(csv_string) as csv_handler:
-            fieldnames = self._read_csv(
+            header = self._read_csv(
                 csv_handler,
                 csv_reader=csv.reader,
                 **kwargs
-            )[0]
+            )
 
-            kwargs['fieldnames'] = fieldnames
+            fieldnames = None
+            if isinstance(data[0], dict):
+                fieldnames = data[0].keys()
 
-            self._write_csv(csv_handler, data, csv_writer=csv.DictWriter, **kwargs)
+            if isinstance(data[0], dict) and len(header) > 0:
+                fieldnames = header[0]
+
+            if fieldnames is not None:
+                kwargs['fieldnames'] = fieldnames
+                kwargs['csv_writer'] = csv.DictWriter
+
+            self._write_csv(csv_handler, data, **kwargs)
             return csv_handler.getvalue()
 
     def csv_file_from_associative(self, filename, data, fieldnames=None, delimiter=',', **kwargs):
@@ -245,7 +270,7 @@ class CSVLibrary(object):
         )
 
     def csv_string_from_associative(self, data, fieldnames=None, delimiter=',', **kwargs):
-        """This keyword will create new file
+        """This keyword will return csv string
 
         - ``data``: iterable(e.g. list or tuple) data.
         - ``fieldnames``: list of column names
