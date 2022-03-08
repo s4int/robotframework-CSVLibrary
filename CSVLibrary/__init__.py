@@ -1,6 +1,8 @@
 import csv
-from robot.api import logger
 import sys
+
+from robot.api import logger
+from robot.utils.dotdict import DotDict
 
 if sys.version_info.major >= 3:
     from io import StringIO as IO
@@ -8,6 +10,10 @@ else:
     from io import BytesIO as IO
 
 __version__ = '0.0.4'
+
+class DotDictReader(csv.DictReader):
+    def __next__(self):
+        return DotDict(super().__next__())
 
 
 class CSVLibrary(object):
@@ -134,7 +140,7 @@ class CSVLibrary(object):
         kwargs['fieldnames'] = fieldnames
         csv_dict = self._open_csv_file_for_read(
             filename,
-            csv_reader=csv.DictReader,
+            csv_reader=DotDictReader,
             delimiter=str(delimiter),
             **kwargs
         )
@@ -159,7 +165,7 @@ class CSVLibrary(object):
         with IO(csv_string) as csv_handler:
             csv_dict = self._read_csv(
                 csv_handler,
-                csv_reader=csv.DictReader,
+                csv_reader=DotDictReader,
                 delimiter=str(delimiter),
                 fieldnames=fieldnames,
                 **kwargs

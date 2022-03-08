@@ -18,6 +18,11 @@ Read csv file to a dict example test
     @{dict}=    read csv file to associative  ${CURDIR}${/}data.csv
     dictionaries should be equal  ${template_dict}  ${dict[0]}
 
+Read csv file to a dict example test access as attributes
+    @{dict}=    read csv file to associative  ${CURDIR}${/}data.csv
+    Should Be Equal As Strings    ${dict[0].first_name}    ${dict[0]}[first_name]
+    Should Be Equal As Integers    ${dict[0].id}    ${dict[0]}[id]
+    
 Read csv file without quoting to associative
     @{dict}=    read csv file to associative  ${CURDIR}${/}data_quoting.csv  delimiter=,  quoting=${3}
     dictionaries should be equal  ${template_dict_quoting}  ${dict[0]}
