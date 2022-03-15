@@ -1,0 +1,28 @@
+name: Generate docs
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'CSVLibrary/**.py'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Generate robotframework docs
+        run: python doc/generate.py
+      - name: Update docs
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Update Robot Framework docs'
+          add: 'doc/**.html'
