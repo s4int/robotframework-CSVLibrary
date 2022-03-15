@@ -9,7 +9,7 @@ if sys.version_info.major >= 3:
 else:
     from io import BytesIO as IO
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 class DotDictReader(csv.DictReader):
     def __next__(self):
