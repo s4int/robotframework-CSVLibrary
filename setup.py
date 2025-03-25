@@ -1,28 +1,18 @@
 #!/usr/bin/env python
+from setuptools import setup, find_packages
+# from CSVLibrary.version import VERSION
 
-from os.path import join, dirname, abspath
-from setuptools import setup
+with open('CSVLibrary/version.py') as f:
+    VERSION = f.read().strip().lower().replace(" ", "").replace("\"", "").replace("version=", "")
 
+with open('requirements.txt') as f:
+    REQUIREMENTS = f.read().splitlines()
 
-def read(rel_path):
-    here = abspath(dirname(__file__))
-    with open(join(here, rel_path)) as fp:
-        return fp.read()
-
-
-def get_version(rel_path):
-    for line in read(rel_path).splitlines():
-        if line.startswith("__version__"):
-            delim = '"' if '"' in line else "'"
-            return line.split(delim)[1]
-    raise RuntimeError("Unable to find version string.")
-
-
-REQUIREMENTS = read('requirements.txt').splitlines()
-DESCRIPTION = read('README.md')
+with open('README.md') as f:
+    DESCRIPTION = f.read()
 
 setup(name='robotframework-csvlibrary',
-      version=get_version("CSVLibrary/__init__.py"),
+      version=VERSION,
       description='CSV library for Robot Framework',
       long_description=DESCRIPTION,
       long_description_content_type='text/markdown',
@@ -48,5 +38,5 @@ setup(name='robotframework-csvlibrary',
           'Programming Language :: Python :: 3.10',
       ],
       install_requires=REQUIREMENTS,
-      packages=['CSVLibrary'],
+      packages=find_packages(),
       )
